@@ -1,0 +1,11 @@
+import {test} from 'node:test';
+import assert from 'node:assert/strict';
+import {preparationState} from '../lib/kitchen.ts';
+const now=Date.parse('2026-10-21T12:00:00Z');
+const ticket={requested_at:'2026-10-21T13:00:00Z',confirmed_at:null,preparation_minutes:90,status:'accepted'};
+test('long-preparation meals can start before the default 30-minute window',()=>{const state=preparationState(ticket,now);assert.equal(state.canStart,true);assert.equal(state.kind,'due');});
+test('scheduled meal stays disabled before its preparation window',()=>{assert.equal(preparationState({...ticket,requested_at:'2026-10-21T15:00:00Z'},now).canStart,false);});
+test('confirmed service time determines kitchen priority',()=>{const state=preparationState({...ticket,confirmed_at:'2026-10-21T16:00:00Z'},now);assert.equal(state.kind,'scheduled');assert.equal(state.due,Date.parse('2026-10-21T16:00:00Z'));});
+test('late accepted orders are highlighted and actionable',()=>{const state=preparationState({...ticket,requested_at:'2026-10-21T11:00:00Z'},now);assert.equal(state.kind,'overdue');assert.equal(state.canStart,true);});
+test('ready tickets do not offer preparation actions',()=>{const state=preparationState({...ticket,status:'ready'},now);assert.equal(state.kind,'ready');assert.equal(state.canStart,false);});
+test('preparing tickets cannot be started again',()=>{assert.equal(preparationState({...ticket,status:'preparing'},now).canStart,false);});
