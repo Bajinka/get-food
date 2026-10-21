@@ -52,4 +52,4 @@ Five additional database assertions and six pure kitchen-priority tests cover re
 - Scheduled preparation is operator-driven and SQL-gated, not a background worker or external notification service. Customer tracking uses Realtime plus refresh fallbacks; actual delivery remains unverified.
 - Concurrent load, full role-by-role browser workflows, upload abuse tests, email delivery, backup/restore drills, accessibility audit, and deployed Vercel validation remain required before a real launch.
 
-No live credentials were written to source, no Git changes were pushed, and no hosted database was reset or seeded. Environment draft saves do not publish the application or environment.
+No live credentials were written to source and no hosted database was reset or seeded. The application source was committed and pushed to the separate GitHub branch `codex/get-food-app` on 21 October 2026; `main` was preserved. Environment draft saves do not publish the application or environment.
